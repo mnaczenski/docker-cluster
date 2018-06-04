@@ -8,3 +8,4 @@ RUN docker-php-ext-install zip
 RUN docker-php-ext-install opcache
 RUN docker-php-ext-install xml
 RUN pecl install apcu && docker-php-ext-enable apcu
+RUN pecl install -o -f redis &&  rm -rf /tmp/pear &&  docker-php-ext-enable redis
