@@ -46,6 +46,8 @@ services:
     internal:
       aliases:
         - redis
+  ports:
+    - "6379:6379"
  elasticsearch:
   image: elasticsearch
   build: elasticsearch/
@@ -53,6 +55,8 @@ services:
     internal:
       aliases:
         - elasticsearch
+  ports:
+    - "9200:9200"
  loadbalancer:
   image: loadbalancer
   build: loadbalancer/
