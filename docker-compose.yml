@@ -1,0 +1,68 @@
+version: "3.2"
+services:
+ webserver:
+  image: webserver
+  build: webserver/
+  networks:
+    internal:
+      aliases:
+        - webserver
+  volumes:
+    - type: bind
+      source: /webdata
+      target: /var/www/html
+ database:
+  image: database
+  build: database/
+  healthcheck:
+      test: mysqladmin -uroot -proot ping
+      interval: 5s
+      timeout: 2s
+      retries: 30
+  networks:
+    internal:
+      aliases:
+        - database
+  restart: always
+  ports:
+    - "3306:3306"
+  environment:
+   MYSQL_ROOT_PASSWORD: root   
+ scripthandler:
+  image: scripthandler
+  build: scripthandler/
+  networks:
+    internal:
+      aliases:
+        - scripthandler
+  volumes:
+    - type: bind
+      source: /webdata
+      target: /var/www/html
+ redis:
+  image: redis
+  build: redis/
+  networks:
+    internal:
+      aliases:
+        - redis
+ elasticsearch:
+  image: elasticsearch
+  build: elasticsearch/
+  networks:
+    internal:
+      aliases:
+        - elasticsearch
+ loadbalancer:
+  image: loadbalancer
+  build: loadbalancer/
+  networks:
+    internal:
+      aliases:
+        - loadbalancer
+  ports:
+   - "80:80"
+volumes:
+  webdata:
+networks:
+  internal:
