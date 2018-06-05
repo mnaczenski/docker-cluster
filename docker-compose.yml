@@ -27,7 +27,11 @@ services:
   ports:
     - "3306:3306"
   environment:
-   MYSQL_ROOT_PASSWORD: root   
+   MYSQL_ROOT_PASSWORD: root
+  volumes:
+   - type: bind
+     source: /mariadb
+     target: /var/lib/mysql   
  scripthandler:
   image: scripthandler
   build: scripthandler/
@@ -66,6 +70,19 @@ services:
         - loadbalancer
   ports:
    - "80:80"
+ sw-cli-tools:
+  image: sw-cli-tools
+  build: sw-cli-tools/
+  networks:
+    internal:
+      aliases:
+        - sw-cli-tools
+  environment:
+    PATH: $PATH:/var/www/sw-cli-tools/bin
+  volumes:
+    - type: bind
+      source: /webdata
+      target: /var/www/html
 volumes:
   webdata:
 networks:
